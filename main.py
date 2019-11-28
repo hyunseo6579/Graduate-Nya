@@ -1,4 +1,5 @@
 import pygame
+#from assignment import assignment
 
 
 def main():
@@ -7,16 +8,40 @@ def main():
     window = pygame.display.set_mode((750,500))
     run = True
     frame = 0
+    assignum = 1
+    duedate = [3,6,9]
+    progress = [1,1,2]  # how many asisgnments completed; 0 means in progress aka dot
     date = 1  # d-1. puzzle changes from assignment to exam depending on the date
 
     title = titlepage(window)
     mainpg = mainpage(window,date)
+    #assig = assignment(window)
 
+    def run_assig(text):
+        pass
+        #assig.start(assignum,text)  # pulls the assignment 1 screen
+        #if assig.clicked() == "enter":
+            #if assig.correct(assignum,text) == True:
+                #progress[0] = 1 (if not, player can try again until it's due date)
+                #assig.popup(1)
+            #else:
+                #assig.popup(0)
+            #date ++
+            #if assig.clicked() == "ok":  # ok button should only work after enter button has been pressed
+                #frame = 1  # go back to mainpg
+
+    text = ''
     while run:
         pygame.time.delay(50)
         for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_BACKSPACE:
+                        text = text[:-1]
+                    else:
+                        text += event.unicode
+
         window.fill((255, 255, 255))
 
         if frame == 0:
@@ -25,9 +50,22 @@ def main():
                 frame += 1
 
         elif frame == 1:
+            # check date matching with assignment due date (if the date is past, and assig incomplete, progress[0] = 2)
             mainpg.draw()
             mainpg.blit()
+            mainpg.progressblit(progress)
             mainpg.showtext(date)
+
+            if mainpg.clicked() == "assignment/exam":
+                pass
+                #frame += assignum
+
+            elif mainpg.clicked() == "syllabus":
+                pass
+
+        elif frame == 2 or frame == 3 or frame == 4:  # frame for assignments
+            run_assig(text[:10])  #only take input text up to 10 char
+
 
         pygame.display.update()
 
@@ -79,6 +117,10 @@ class mainpage:
         self.syllabusicon = pygame.image.load('nyas/syllabus.png')
         self.calender = pygame.image.load('nyas/calender.png')
         self.flower = pygame.image.load('nyas/flower.png')
+        self.clipboard = pygame.image.load('nyas/clipboard.png')
+        self.dot = pygame.image.load('nyas/dot.png')
+        self.check = pygame.image.load('nyas/check.png')
+        self.ex = pygame.image.load('nyas/ex.png')
         self.icons = [pygame.Rect((50,250),(80,90)),pygame.Rect((50,350),(80,90)),pygame.Rect((200,30),(100,120))]   # list of buttons(Rects) that can be pressed
 
     def blit(self):
@@ -93,6 +135,25 @@ class mainpage:
         self.window.blit(self.syllabusicon,self.icons[0])
         self.window.blit(self.calender,self.icons[2])
         self.window.blit(self.flower,pygame.Rect((600,325),(100,140)))
+        self.window.blit(self.clipboard, pygame.Rect((525,50),(45,55)))
+
+
+    def progressblit(self,progress):
+        x = 580
+        between = 40 # space between the x coords
+        y = 65
+        rect = (30,30)
+
+        # self note: progress 0 = dot, 1 = check, 2 = ex
+
+        for i in range(3): # total of 3 assignments
+            if progress[i] == 0:
+                self.window.blit(self.dot, pygame.Rect((x+between*i, y), rect))
+            elif progress[i] == 1:
+                self.window.blit(self.check, pygame.Rect((x + between * i, y), rect))
+            elif progress[i] == 2:
+                self.window.blit(self.ex, pygame.Rect((x + between * i, y), rect))
+
 
     def draw(self):
         self.walllines()
@@ -121,8 +182,9 @@ class mainpage:
         # 0 is syllabus, 1 is puzzle(assignment or exam)
         if pygame.mouse.get_pressed()[0]:
             a,b = pygame.mouse.get_pos()
-            for i in range(2):  # only 0 and 1 are buttons
-                if self.icons[i].collidepoint(a,b):
-                    return i
+            if self.icons[0].collidepoint(a,b):
+                return "syllabus"
+            elif self.icons[1].collidepoint(a,b):
+                return "assignment/exam"
 
 main()
