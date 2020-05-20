@@ -150,8 +150,8 @@ class titlepage:
         self.startbutton = pygame.image.load('nyas/start.png')
         self.window = window
         self.windowsz = window.get_size()
-        self.catcoord = ((self.windowsz[0]-541)/2,0)
-        self.strtcoord = ((self.windowsz[0]-200)/2,(self.windowsz[1]/5)*4)
+        self.catcoord = (int((self.windowsz[0]-541)/2),0)
+        self.strtcoord = (int((self.windowsz[0]-200)/2),int(self.windowsz[1]/5)*4)
         self.strtRect = pygame.Rect(self.strtcoord, (200, 70))
 
         self.test = pygame.image.load('nyas/calender.png')
@@ -200,7 +200,7 @@ class mainpage:
         # blits frames to make it into an animation
         i = self.i % 5  # switch image every update
         j = self.j % 6
-        self.window.blit(self.catframes[i], (self.windowsz[0]/3,self.windowsz[1]/5))
+        self.window.blit(self.catframes[i], (int(self.windowsz[0]/3),int(self.windowsz[1]/5)))
         self.window.blit(self.windowframes[j],(30,30))
         self.i = i + 1
         self.j = j + 1
@@ -235,8 +235,8 @@ class mainpage:
 
     def walllines(self):
         # next 3 lines are to draw room lining
-        pygame.draw.aaline(self.window,self.black,(0,3*self.windowsz[1]/4),(500,200))
-        pygame.draw.aaline(self.window,self.black,(500,200),(self.windowsz[0],3*self.windowsz[1]/5))
+        pygame.draw.aaline(self.window,self.black,(0,3*int(self.windowsz[1]/4)),(500,200))
+        pygame.draw.aaline(self.window,self.black,(500,200),(self.windowsz[0],3*int(self.windowsz[1]/5)))
         pygame.draw.aaline(self.window,self.black,(500,200),(500,0))
 
     def showtext(self,date):
